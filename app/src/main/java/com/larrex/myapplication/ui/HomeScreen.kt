@@ -18,13 +18,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.larrex.myapplication.R
 import com.larrex.myapplication.Util
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
-
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(Color.Transparent, true)
     var searchValue by remember {
         mutableStateOf(TextFieldValue(""))
     }
@@ -52,21 +54,21 @@ fun HomeScreen() {
 
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
 
-
-                    Icon(
-                        painter = rememberAsyncImagePainter(model = R.drawable.ic_filter),
-                        contentDescription = null, modifier = Modifier.padding(start = 15.dp)
-                            .size(20.dp).toggleable(true,true, onValueChange = {
-
-                            })
-                    )
+//
+//                    Icon(
+//                        painter = rememberAsyncImagePainter(model = R.drawable.ic_filter),
+//                        contentDescription = null, modifier = Modifier.padding(start = 15.dp)
+//                            .size(20.dp).toggleable(true,true, onValueChange = {
+//
+//                            })
+//                    )
 
                     TextField(
                         value = searchValue, onValueChange = { text ->
                             searchValue = text
 
                         }, modifier = Modifier
-                            .padding(top = 0.dp, end = 20.dp, start = 10.dp, bottom = 0.dp)
+                            .padding(top = 0.dp, end = 20.dp, start = 20.dp, bottom = 0.dp)
                             .fillMaxWidth()
                             .height(55.dp),
                         placeholder = {
