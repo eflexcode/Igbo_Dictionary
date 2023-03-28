@@ -57,6 +57,7 @@ fun HomeScreen() {
     var showProcess by remember { mutableStateOf(false) }
     val titles = listOf("Search Result", "History")
     var pagerState = rememberPagerState()
+//    val wordMeaning by
 
 
     var state by remember { mutableStateOf(0) }

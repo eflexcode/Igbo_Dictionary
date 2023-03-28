@@ -9,6 +9,7 @@ import java.util.*
 class Util {
 
     companion object {
+        val IGBO_API_LINK_BASE_URL = "https://igboapi.com/api/v1/"
 
         val quicksand = FontFamily(
 
