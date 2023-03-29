@@ -8,9 +8,14 @@ import androidx.navigation.compose.composable
 import com.larrex.myapplication.ui.FirstTimeScreen
 import com.larrex.myapplication.ui.HomeScreen
 import com.larrex.myapplication.ui.SplashScreen
+import com.larrex.myapplication.ui.viewmodel.MainViewModel
 
 @Composable
-fun MainNavGraph(navHostController: NavHostController, application: Application) {
+fun MainNavGraph(
+    navHostController: NavHostController,
+    application: Application,
+    viewModel: MainViewModel
+) {
 
     NavHost(navController = navHostController, startDestination = NavScreens.Splash.route) {
 
@@ -21,7 +26,7 @@ fun MainNavGraph(navHostController: NavHostController, application: Application)
             FirstTimeScreen(navHostController)
         }
         composable(NavScreens.Home.route) {
-            HomeScreen()
+            HomeScreen(viewModel)
         }
     }
 

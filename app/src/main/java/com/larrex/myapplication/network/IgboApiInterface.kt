@@ -4,11 +4,13 @@ import com.larrex.myapplication.network.model.IgboApiResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.QueryMap
 
 
 interface IgboApiInterface {
-    @Headers("X-API-Key: 658ba048-c7f2-4d48-94fb-f13d1055ecea")
+    @Headers("X-API-Key: a116f7c5-782c-4566-9f8f-3f69efe16cd6")
     @GET("words")
-    fun getMeanings() : Call<List<IgboApiResponse>>
+    @JvmSuppressWildcards
+    fun getMeanings(@QueryMap map: Map<String,Any>) : Call<List<IgboApiResponse>>
 
 }

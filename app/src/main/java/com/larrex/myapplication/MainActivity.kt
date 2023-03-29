@@ -1,23 +1,26 @@
 package com.larrex.myapplication
 
+import android.os.Build
 import android.os.Bundle
-import android.view.View
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.larrex.myapplication.ui.SplashScreen
 import com.larrex.myapplication.ui.navigation.MainNavGraph
 import com.larrex.myapplication.ui.theme.IgboDictionryTheme
+import com.larrex.myapplication.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -29,6 +32,8 @@ class MainActivity : ComponentActivity() {
             ViewCompat.getWindowInsetsController(window.decorView)
 
         windowInsetsController?.isAppearanceLightNavigationBars = true
+        val gfgPolicy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(gfgPolicy)
 
         setContent {
             IgboDictionryTheme {
@@ -38,7 +43,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navHostController = rememberNavController()
-                    MainNavGraph(navHostController = navHostController, application = application)
+                    val viewModel = hiltViewModel<MainViewModel>()
+                    MainNavGraph(navHostController = navHostController, application = application,viewModel)
                 }
             }
         }

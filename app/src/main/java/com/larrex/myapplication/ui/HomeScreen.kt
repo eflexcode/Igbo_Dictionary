@@ -4,6 +4,7 @@ import android.os.Handler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,8 +35,11 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.larrex.myapplication.R
 import com.larrex.myapplication.Util
+import com.larrex.myapplication.network.model.Responce
+import com.larrex.myapplication.network.model.Status
 import com.larrex.myapplication.ui.component.SearchResponseItem
 import com.larrex.myapplication.ui.theme.green
+import com.larrex.myapplication.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -43,7 +47,7 @@ import kotlinx.coroutines.launch
     ExperimentalPagerApi::class
 )
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: MainViewModel) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(Color.Transparent, true)
     var searchValue by remember {
@@ -57,8 +61,9 @@ fun HomeScreen() {
     var showProcess by remember { mutableStateOf(false) }
     val titles = listOf("Search Result", "History")
     var pagerState = rememberPagerState()
-//    val wordMeaning by
 
+//    val wordMeaning by viewModel.getWordMeanings(searchValue.text)
+//        .collectAsState(initial = Responce(Status.NOTHING, null))
 
     var state by remember { mutableStateOf(0) }
 
@@ -163,14 +168,16 @@ fun HomeScreen() {
                         fontSize = 15.sp,
                     ), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
-                        keyController?.hide()
-                        showProcess = true
-                        handler.postDelayed({
-                            showProcess = false
-//                                scope.launch {
-//                                    sheetState.show()
-//                                }
-                        }, 2000)
+//                        keyController?.hide()
+//                        showProcess = true
+//                        handler.postDelayed({
+//                            showProcess = false
+                                scope.launch {
+                                   viewModel.getWordMeanings(searchValue.text)
+                                    println(searchValue.text)
+                                }
+//                        }, 2000)
+
                     })
                 )
             }
@@ -212,33 +219,37 @@ fun HomeScreen() {
 //                    modifier = Modifier.fillMaxSize()
 //                )
 //            }
-                HorizontalPager(count = titles.size,state = pagerState, modifier = Modifier
-                    .fillMaxSize(), userScrollEnabled = false) {
+            HorizontalPager(
+                count = titles.size, state = pagerState, modifier = Modifier
+                    .fillMaxSize(), userScrollEnabled = false
+            ) {
 
-                    when(it){
+                when (it) {
 
-                        0->{
+                    0 -> {
 
-                            Box(modifier = Modifier.fillMaxSize()){
-
-                                SearchResponseItem()
-
-                            }
-//                           LazyColumn(){
-//                               items(100){
-//                                   Text(text = "Hi am number $it")
-//                               }
-//                           }
-                        }
-                        1->{
-                            Box(modifier = Modifier
+//                        Box(modifier = Modifier.fillMaxSize()) {
+//
+//                            SearchResponseItem()
+//
+//                        }
+                           LazyColumn(){
+                               items(viewModel.latestResponse.value.responce){
+                                   it.word?.let { it1 -> Text(text = it1) }
+                               }
+                           }
+                    }
+                    1 -> {
+                        Box(
+                            modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color.Black))
-                        }
-
+                                .background(Color.Black)
+                        )
                     }
 
                 }
+
+            }
 
 //                Button(
 //                    onClick = {

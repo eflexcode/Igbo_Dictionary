@@ -7,12 +7,17 @@ import com.larrex.myapplication.network.model.Responce
 import com.larrex.myapplication.network.model.Status
 import com.larrex.myapplication.repository.Repository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.Objects
 import javax.inject.Inject
 
-@ActivityRetainedScoped
+//@ActivityRetainedScoped
 class RepositoryImpl @Inject constructor(
     private var application: Application,
     private var igboApiInterface: IgboApiInterface
@@ -21,10 +26,10 @@ class RepositoryImpl @Inject constructor(
 
         //https://igboapi.com/api/v1/words?keyword=please&page=0&range=1&strict=true&dialects=true&examples=true&isStandardIgbo=true&pronunciation=true&nsibidi=false
 
-        return flow {
-
-            val loadingResponse  = Responce(Status.LOADING,"Loading...")
-            emit(loadingResponse)
+        return callbackFlow {
+            println("this is keyword $keyword")
+            val loadingResponse = Responce(Status.LOADING, emptyList(), "Loading...")
+            trySend(loadingResponse)
 
             val map: MutableMap<String, Any> = HashMap()
             map["keyword"] = keyword
@@ -36,19 +41,35 @@ class RepositoryImpl @Inject constructor(
             map["isStandardIgbo"] = true
             map["nsibidi"] = false
 
-            val apiData = igboApiInterface.getMeanings().execute()
+            val apiData =
+                igboApiInterface.getMeanings(map).enqueue(object : Callback<List<IgboApiResponse>> {
+                    override fun onResponse(
+                        call: Call<List<IgboApiResponse>>,
+                        response: Response<List<IgboApiResponse>>
+                    ) {
 
-            if (apiData.isSuccessful) {
+                        val successResponse =
+                            response.body()?.let { Responce(Status.SUCCESS, it, "") }
+                        if (successResponse != null) {
+                            trySend(successResponse)
+                        }
 
-                val successResponse  = Responce(Status.SUCCESS,apiData.body())
+                        println("this is keyword ${response.body()?.size}")
 
-                emit(successResponse)
+                    }
 
-            } else {
-                val errorResponse  = Responce(Status.FAILURE,"Something went wrong please try again")
+                    override fun onFailure(call: Call<List<IgboApiResponse>>, t: Throwable) {
+                        val errorResponse = Responce(
+                            Status.FAILURE,
+                            emptyList(),
+                            "Something went wrong please try again"
+                        )
 
-                emit(errorResponse)
-            }
+                        trySend(errorResponse)
+                        println("this is keyword error")
+                    }
+                })
+            awaitClose { }
         }
 
     }
