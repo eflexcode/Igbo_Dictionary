@@ -35,6 +35,33 @@ class Util {
 
         }
 
+        fun getWordClassType(type: String): String {
+
+          return  when (type) {
+                "ADJ" -> return "Adjective"
+                "ADV" -> return "Adverb"
+                "AV" -> return "Active verb"
+                "MV" -> return "Medial verb"
+                "PV" -> return "Passive verb"
+                "CJN" -> return "Conjunction"
+                "DEM" -> return "Demonstrative"
+                "NM" -> return "Name"
+                "NNC" -> return "Noun"
+                "NNP" -> return "Proper noun"
+                "CD" -> return "Number"
+                "PREP" -> return "Preposition"
+                "PRN" -> return "Pronoun"
+                "FW" -> return "Foreign word"
+                "QTF" -> return "Quantifier"
+                "WH" -> return "Interrogative"
+                "INTJ" -> return "Interjection"
+                "ISUF" -> return "Inflectional suffix"
+                "ESUF" -> return "Extensional suffix"
+                "SYM" -> return "Punctuations"
+              else -> "Unknown"
+          }
+        }
+
         fun formatDate(oldDate: String): String {
 
 

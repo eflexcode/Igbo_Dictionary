@@ -168,14 +168,14 @@ fun HomeScreen(viewModel: MainViewModel) {
                         fontSize = 15.sp,
                     ), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
-//                        keyController?.hide()
+                        keyController?.hide()
 //                        showProcess = true
 //                        handler.postDelayed({
 //                            showProcess = false
-                                scope.launch {
-                                   viewModel.getWordMeanings(searchValue.text)
-                                    println(searchValue.text)
-                                }
+                        scope.launch {
+                            viewModel.getWordMeanings(searchValue.text)
+                            println(searchValue.text)
+                        }
 //                        }, 2000)
 
                     })
@@ -228,16 +228,15 @@ fun HomeScreen(viewModel: MainViewModel) {
 
                     0 -> {
 
-//                        Box(modifier = Modifier.fillMaxSize()) {
-//
-//                            SearchResponseItem()
-//
-//                        }
-                           LazyColumn(){
-                               items(viewModel.latestResponse.value.responce){
-                                   it.word?.let { it1 -> Text(text = it1) }
-                               }
-                           }
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            LazyColumn() {
+                                items(viewModel.latestResponse.value.responce) {
+                                    SearchResponseItem(it)
+
+                                }
+                            }
+                        }
+
                     }
                     1 -> {
                         Box(
