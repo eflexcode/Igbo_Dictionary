@@ -147,12 +147,12 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
         }
         if (reponse.attributes?.isConstructedTerm == true) {
             ProviderChip(
-                chipText = "ConstructedTerm",
+                chipText = "Constructed Term",
                 onChipSelected = {})
         }
         if (reponse.attributes?.isBorrowedTerm == true) {
             ProviderChip(
-                chipText = "BorrowedTerm",
+                chipText = "Borrowed Term",
                 onChipSelected = {})
         }
         if (reponse.attributes?.isStem == true) {
