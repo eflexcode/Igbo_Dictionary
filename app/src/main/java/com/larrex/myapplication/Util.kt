@@ -19,6 +19,10 @@ class Util {
 
         )
 
+        val nsibidi  = FontFamily(
+            Font(R.font.akagu2020_3)
+        )
+
         fun getGreeting(): String {
 
             val time = Date().hours

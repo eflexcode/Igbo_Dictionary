@@ -25,7 +25,7 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
+            .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 0.dp)
     ) {
 
         Column() {
@@ -36,6 +36,7 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
                 color = green,
                 fontWeight = FontWeight.Light,
                 style = TextStyle.Default,
+                fontFamily = Util.nsibidi,
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -115,26 +116,54 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
 
             }
 
-            FlowRow(
-                modifier = Modifier.padding(
-                    start = 0.dp,
-                    end = 5.dp,
-                    top = 5.dp,
-                    bottom = 0.dp
-                )
-            ) {
 
-                ProviderChip(chipText = "Standard Igbo: "+if(reponse.attributes?.isStandardIgbo == true) "Yes" else "No", onChipSelected = {})
-                ProviderChip(chipText = "Accented: "+if(reponse.attributes?.isAccented == true) "Yes" else "No", onChipSelected = {})
-                ProviderChip(chipText = "Slang: "+if(reponse.attributes?.isSlang == true) "Yes" else "No", onChipSelected = {})
-                ProviderChip(chipText = "ConstructedTerm: "+if(reponse.attributes?.isConstructedTerm == true) "Yes" else "No", onChipSelected = {})
-                ProviderChip(chipText = "BorrowedTerm: "+if(reponse.attributes?.isBorrowedTerm == true) "Yes" else "No", onChipSelected = {})
-                ProviderChip(chipText = "Stem: "+if(reponse.attributes?.isStem == true) "Yes" else "No", onChipSelected = {})
-                ProviderChip(chipText = "Common: "+if(reponse.attributes?.isCommon == true) "Yes" else "No", onChipSelected = {})
+        }
 
+    }
+    FlowRow(
+        modifier = Modifier.padding(
+            start = 5.dp,
+            end = 0.dp,
+            top = 5.dp,
+            bottom = 5.dp
+        )
+    ) {
 
-            }
+        if (reponse.attributes?.isStandardIgbo == true) {
 
+            ProviderChip(
+                chipText = "Standard Igbo",
+                onChipSelected = {})
+        }
+        if (reponse.attributes?.isAccented == true) {
+            ProviderChip(
+                chipText = "Accented",
+                onChipSelected = {})
+        }
+        if (reponse.attributes?.isSlang == true) {
+            ProviderChip(
+                chipText = "Slang",
+                onChipSelected = {})
+        }
+        if (reponse.attributes?.isConstructedTerm == true) {
+            ProviderChip(
+                chipText = "ConstructedTerm",
+                onChipSelected = {})
+        }
+        if (reponse.attributes?.isBorrowedTerm == true) {
+            ProviderChip(
+                chipText = "BorrowedTerm",
+                onChipSelected = {})
+        }
+        if (reponse.attributes?.isStem == true) {
+            ProviderChip(
+                chipText = "Stem",
+                onChipSelected = {})
+        }
+        if (reponse.attributes?.isCommon == true) {
+            ProviderChip(
+                chipText = "Common",
+                onChipSelected = {})
         }
 
     }
