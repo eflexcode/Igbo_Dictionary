@@ -40,7 +40,7 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 5.dp)
             ) {
                 Text(
                     text = reponse.word.toString(),
@@ -65,6 +65,8 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
 
             }
 
+//            PronunciationItem(play = {  }, isPlaying = false)
+
             reponse.definitions.forEachIndexed { index, defination ->
                 val count = index + 1
                 Text(
@@ -79,6 +81,29 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
                 )
             }
 
+            Text(
+                text = "variations:",
+                textAlign = TextAlign.Start,
+                fontSize = 20.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontFamily = Util.quicksand,
+                style = TextStyle.Default,
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+            )
+
+            reponse.variations.forEach {
+                Text(
+                    text =  it,
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Util.quicksand,
+                    style = TextStyle.Default,
+                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                )
+            }
             Text(
                 text = "Examples:",
                 textAlign = TextAlign.Start,
@@ -100,7 +125,7 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
                     fontWeight = FontWeight.Normal,
                     fontFamily = Util.quicksand,
                     style = TextStyle.Default,
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                    modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
                 )
                 Text(
                     text = "Igbo: " + example.igbo.toString(),
@@ -110,12 +135,57 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
                     fontWeight = FontWeight.Normal,
                     fontFamily = Util.quicksand,
                     style = TextStyle.Default,
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                    modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
                 )
 
 
             }
-
+//            Text(
+//                text = "Related Terms:",
+//                textAlign = TextAlign.Start,
+//                fontSize = 20.sp,
+//                color = Color.Black,
+//                fontWeight = FontWeight.Bold,
+//                fontFamily = Util.quicksand,
+//                style = TextStyle.Default,
+//                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//            )
+//
+//            reponse.relatedTerms.forEach {
+//                Text(
+//                    text =  it,
+//                    textAlign = TextAlign.Start,
+//                    fontSize = 15.sp,
+//                    color = Color.Black,
+//                    fontWeight = FontWeight.Normal,
+//                    fontFamily = Util.quicksand,
+//                    style = TextStyle.Default,
+//                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                )
+//            }
+//            Text(
+//                text = "Word Stems:",
+//                textAlign = TextAlign.Start,
+//                fontSize = 20.sp,
+//                color = Color.Black,
+//                fontWeight = FontWeight.Bold,
+//                fontFamily = Util.quicksand,
+//                style = TextStyle.Default,
+//                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//            )
+//
+//            reponse.stems.forEach {
+//                Text(
+//                    text =  it,
+//                    textAlign = TextAlign.Start,
+//                    fontSize = 15.sp,
+//                    color = Color.Black,
+//                    fontWeight = FontWeight.Normal,
+//                    fontFamily = Util.quicksand,
+//                    style = TextStyle.Default,
+//                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                )
+//            }
 
         }
 

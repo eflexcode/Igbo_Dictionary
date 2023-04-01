@@ -304,7 +304,6 @@ fun HomeScreen(viewModel: MainViewModel) {
                                                 )
                                         }
 
-
                                     }
 
                                 }
