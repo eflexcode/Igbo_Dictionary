@@ -1,6 +1,7 @@
 package com.larrex.myapplication.ui
 
 import android.os.Handler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -229,9 +230,171 @@ fun HomeScreen(viewModel: MainViewModel) {
                     0 -> {
 
                         Box(modifier = Modifier.fillMaxSize()) {
-                            LazyColumn() {
-                                items(viewModel.latestResponse.value.responce) {
-                                    SearchResponseItem(it)
+
+                            when (viewModel.latestResponse.value.status) {
+                                Status.SUCCESS -> {
+
+                                    if (viewModel.latestResponse.value.responce.isNotEmpty()) {
+
+                                        LazyColumn() {
+                                            items(viewModel.latestResponse.value.responce) {
+                                                SearchResponseItem(it)
+
+                                            }
+                                        }
+                                    }else{
+                                        Box(
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+
+                                            Column(
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+
+                                                Image(
+                                                    painter = rememberAsyncImagePainter(model = R.drawable.undraw_empty),
+                                                    contentDescription = null, Modifier.size(250.dp)
+                                                )
+
+                                                Text(
+                                                    text = "Noting found sorry",
+                                                    textAlign = TextAlign.Center,
+                                                    fontSize = 20.sp,
+                                                    color = Color.Black,
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontFamily = Util.quicksand,
+                                                    style = TextStyle.Default,
+
+                                                    )
+
+                                            }
+
+
+                                        }
+                                    }
+                                }
+                                Status.NOTHING -> {
+
+                                    Box(
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+
+                                        Column(
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+
+                                            Image(
+                                                painter = rememberAsyncImagePainter(model = R.drawable.undraw_search_png),
+                                                contentDescription = null, Modifier.size(250.dp)
+                                            )
+
+                                            Text(
+                                                text = "Type and click search on keyboard",
+                                                textAlign = TextAlign.Center,
+                                                fontSize = 20.sp,
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = Util.quicksand,
+                                                style = TextStyle.Default,
+
+                                                )
+                                        }
+
+
+                                    }
+
+                                }
+                                Status.LOADING -> {
+                                    Box(
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+
+                                        Column(
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+
+                                            CircularProgressIndicator(color = green)
+
+
+                                            Text(
+                                                text = "Searching...",
+                                                textAlign = TextAlign.Center,
+                                                fontSize = 20.sp,
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = Util.quicksand,
+                                                style = TextStyle.Default,
+
+                                                )
+                                        }
+
+
+                                    }
+
+                                }
+                                Status.FAILURE -> {
+                                    Box(
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+
+                                        Column(
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+
+                                            Image(
+                                                painter = rememberAsyncImagePainter(model = R.drawable.undraw_empty),
+                                                contentDescription = null, Modifier.size(250.dp)
+                                            )
+
+                                            Text(
+                                                text = "Something went wrong",
+                                                textAlign = TextAlign.Center,
+                                                fontSize = 20.sp,
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = Util.quicksand,
+                                                style = TextStyle.Default,
+
+                                                )
+                                            Button(
+                                                onClick = {
+                                                    scope.launch {
+                                                        viewModel.getWordMeanings(searchValue.text)
+                                                        println(searchValue.text)
+                                                    }
+                                                },
+                                                modifier = Modifier
+                                                    .padding(
+                                                        bottom = 70.dp,
+                                                        top = 30.dp,
+                                                        start = 30.dp,
+                                                        end = 30.dp
+                                                    )
+                                                    .fillMaxWidth()
+                                                    .height(60.dp),
+                                                colors = ButtonDefaults.buttonColors(green)
+                                            ) {
+
+                                                Text(
+                                                    text = "Try Again?",
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontFamily = Util.quicksand,
+                                                    color = Color.White
+                                                )
+
+                                            }
+                                        }
+
+
+                                    }
 
                                 }
                             }
@@ -250,30 +413,8 @@ fun HomeScreen(viewModel: MainViewModel) {
 
             }
 
-//                Button(
-//                    onClick = {
-//                        scope.launch {
-//                            sheetState.show()
-//                        }
-//                    },
-//                    modifier = Modifier
-//                        .padding(bottom = 70.dp, top = 30.dp, start = 30.dp, end = 30.dp)
-//                        .fillMaxWidth()
-//                        .height(60.dp),
-//                    colors = ButtonDefaults.buttonColors(green)
-//                ) {
-//
-//                    Text(
-//                        text = "see bottom sheet",
-//                        fontWeight = FontWeight.Bold,
-//                        fontFamily = Util.quicksand,
-//                        color = Color.White
-//                    )
-
-
         }
     }
-
 }
 
 

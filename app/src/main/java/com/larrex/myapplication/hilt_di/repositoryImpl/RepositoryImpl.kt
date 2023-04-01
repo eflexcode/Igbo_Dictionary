@@ -32,7 +32,7 @@ class RepositoryImpl @Inject constructor(
             trySend(loadingResponse)
 
             val map: MutableMap<String, Any> = HashMap()
-            map["keyword"] = keyword
+            map["keyword"] = keyword.trim()
             map["page"] = 0
             map["range"] = 1
             map["strict"] = true
