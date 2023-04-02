@@ -238,7 +238,7 @@ fun HomeScreen(viewModel: MainViewModel) {
 
                                         LazyColumn() {
                                             items(viewModel.latestResponse.value.responce) {
-                                                SearchResponseItem(it)
+                                                SearchResponseItem(it,viewModel)
 
                                             }
                                         }

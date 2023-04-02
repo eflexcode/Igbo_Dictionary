@@ -8,5 +8,6 @@ import java.util.*
 interface Repository {
 
    suspend fun getIgboApiResponse(keyword: String): Flow<Responce>
+   suspend fun getSingleWordMeaning(wordId: String): Flow<Responce>
 
 }

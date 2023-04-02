@@ -1,10 +1,15 @@
 package com.larrex.myapplication.hilt_di.module
 
+import android.content.Context
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.audio.AudioAttributes
 import com.larrex.myapplication.Util
 import com.larrex.myapplication.network.IgboApiInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttp
 import okhttp3.OkHttpClient
@@ -32,5 +37,24 @@ object NonAbstractModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(IgboApiInterface::class.java)
     }
+    @Singleton
+    @Provides
+    fun providesAtt(): AudioAttributes {
+        return AudioAttributes.Builder()
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+            .setUsage(C.USAGE_MEDIA)
+            .build()
+    }
+    @Singleton
+    @Provides
+    fun providesExoPlayer(
+        @ApplicationContext context: Context,
+        audioAttributes: AudioAttributes
+    ): ExoPlayer {
 
+        return ExoPlayer.Builder(context)
+            .setAudioAttributes(audioAttributes, false)
+            .setHandleAudioBecomingNoisy(true)
+            .build()
+    }
 }

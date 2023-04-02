@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.larrex.myapplication.R
@@ -25,12 +26,13 @@ import com.larrex.myapplication.Util
 import com.larrex.myapplication.network.model.IgboApiResponse
 import com.larrex.myapplication.ui.theme.green
 import com.larrex.myapplication.ui.theme.greenLight
+import com.larrex.myapplication.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SearchResponseItem(reponse: IgboApiResponse) {
+fun SearchResponseItem(reponse: IgboApiResponse, viewModel: MainViewModel) {
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -81,26 +83,32 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
                     onClick = {
                         scope.launch {
 
-                            val mediaPlayer = MediaPlayer()
-                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                            try {
-                                mediaPlayer.setDataSource(reponse.pronunciation)
-                                mediaPlayer.prepare()
-                                mediaPlayer.start()
-                                Toast.makeText(
-                                    context,
-                                    "Playing pronunciation for " + reponse.word,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                                Toast.makeText(
-                                    context,
-                                    "Failed to play pronunciation for " + reponse.word,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+//                            val mediaPlayer = MediaPlayer()
+//                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+//                            try {
+//                                mediaPlayer.setDataSource(reponse.pronunciation)
+//                                mediaPlayer.prepare()
+//                                mediaPlayer.start()
+//                                Toast.makeText(
+//                                    context,
+//                                    "Playing pronunciation for " + reponse.word,
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//                            } catch (e: IOException) {
+//                                e.printStackTrace()
+//                                Toast.makeText(
+//                                    context,
+//                                    "Failed to play pronunciation for " + reponse.word,
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//                            }
 
+                            reponse.pronunciation?.let { viewModel.playPronunciation(it) }
+                            Toast.makeText(
+                                context,
+                                "Playing pronunciation for " + reponse.word,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     },
                     modifier = Modifier
@@ -249,18 +257,22 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
             )
 
-            reponse.relatedTerms.forEach {
-                Text(
-                    text = it,
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = Util.quicksand,
-                    style = TextStyle.Default,
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                )
+            FlowRow() {
+                reponse.relatedTerms.forEach {
+                    Text(
+                        text = it,
+                        textAlign = TextAlign.Start,
+                        fontSize = 15.sp,
+                        color = green,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = Util.quicksand,
+                        style = TextStyle(textDecoration = TextDecoration.Underline),
+                        modifier = Modifier.padding(top = 3.dp, bottom = 5.dp, end = 3.dp)
+                    )
+                }
             }
+
+
             Text(
                 text = "Word Stems:",
                 textAlign = TextAlign.Start,
