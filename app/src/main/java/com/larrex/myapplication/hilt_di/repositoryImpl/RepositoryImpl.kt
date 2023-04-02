@@ -66,7 +66,7 @@ class RepositoryImpl @Inject constructor(
                         )
 
                         trySend(errorResponse)
-                        println("this is keyword error")
+                        println("this is keyword error "+t.message)
                     }
                 })
             awaitClose { }

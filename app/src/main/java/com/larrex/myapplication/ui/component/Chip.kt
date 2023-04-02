@@ -27,7 +27,7 @@ fun ProviderChip(
     onChipSelected: (String) -> Unit,
     modifier: Modifier =
         Modifier
-            .padding(5.dp)
+            .padding(2.dp)
             .clip(RoundedCornerShape(17.dp))
 ) {
 
@@ -41,7 +41,7 @@ fun ProviderChip(
             .toggleable(value = chipSelected, onValueChange = {
                 onChipSelected(chipText)
             })
-            .padding(top = 7.dp, end = 5.dp, start = 5.dp, bottom = 7.dp)) {
+            .padding(top = 7.dp, end = 6.dp, start = 6.dp, bottom = 7.dp)) {
 
             Text(
                 text = chipText,

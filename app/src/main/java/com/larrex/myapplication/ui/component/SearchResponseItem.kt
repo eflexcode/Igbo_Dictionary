@@ -1,26 +1,40 @@
 package com.larrex.myapplication.ui.component
 
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.IconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.larrex.myapplication.R
 import com.larrex.myapplication.Util
 import com.larrex.myapplication.network.model.IgboApiResponse
 import com.larrex.myapplication.ui.theme.green
+import com.larrex.myapplication.ui.theme.greenLight
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SearchResponseItem(reponse: IgboApiResponse) {
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
 
     Box(
         modifier = Modifier
@@ -40,7 +54,8 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(bottom = 5.dp)
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(bottom = 5.dp)
             ) {
                 Text(
                     text = reponse.word.toString(),
@@ -62,6 +77,89 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
                     fontFamily = Util.quicksand,
                     modifier = Modifier.padding(start = 5.dp)
                 )
+                IconButton(
+                    onClick = {
+                        scope.launch {
+
+                            val mediaPlayer = MediaPlayer()
+                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                            try {
+                                mediaPlayer.setDataSource(reponse.pronunciation)
+                                mediaPlayer.prepare()
+                                mediaPlayer.start()
+                                Toast.makeText(
+                                    context,
+                                    "Playing pronunciation for " + reponse.word,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                                Toast.makeText(
+                                    context,
+                                    "Failed to play pronunciation for " + reponse.word,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        }
+                    },
+                    modifier = Modifier
+                        .size(30.dp)
+                        .padding(start = 5.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_volume),
+                        contentDescription = null,
+                        modifier = Modifier.size(30.dp),
+                        tint = greenLight
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.padding(
+                    start = 0.dp,
+                    end = 0.dp,
+                    top = 0.dp,
+                    bottom = 0.dp
+                )
+            ) {
+
+                if (reponse.attributes?.isStandardIgbo == true) {
+
+                    ProviderChip(
+                        chipText = "Standard Igbo",
+                        onChipSelected = {})
+                }
+                if (reponse.attributes?.isAccented == true) {
+                    ProviderChip(
+                        chipText = "Accented",
+                        onChipSelected = {})
+                }
+                if (reponse.attributes?.isSlang == true) {
+                    ProviderChip(
+                        chipText = "Slang",
+                        onChipSelected = {})
+                }
+                if (reponse.attributes?.isConstructedTerm == true) {
+                    ProviderChip(
+                        chipText = "Constructed Term",
+                        onChipSelected = {})
+                }
+                if (reponse.attributes?.isBorrowedTerm == true) {
+                    ProviderChip(
+                        chipText = "Borrowed Term",
+                        onChipSelected = {})
+                }
+                if (reponse.attributes?.isStem == true) {
+                    ProviderChip(
+                        chipText = "Stem",
+                        onChipSelected = {})
+                }
+                if (reponse.attributes?.isCommon == true) {
+                    ProviderChip(
+                        chipText = "Common",
+                        onChipSelected = {})
+                }
 
             }
 
@@ -94,7 +192,7 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
 
             reponse.variations.forEach {
                 Text(
-                    text =  it,
+                    text = it,
                     textAlign = TextAlign.Start,
                     fontSize = 15.sp,
                     color = Color.Black,
@@ -140,102 +238,56 @@ fun SearchResponseItem(reponse: IgboApiResponse) {
 
 
             }
-//            Text(
-//                text = "Related Terms:",
-//                textAlign = TextAlign.Start,
-//                fontSize = 20.sp,
-//                color = Color.Black,
-//                fontWeight = FontWeight.Bold,
-//                fontFamily = Util.quicksand,
-//                style = TextStyle.Default,
-//                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-//            )
-//
-//            reponse.relatedTerms.forEach {
-//                Text(
-//                    text =  it,
-//                    textAlign = TextAlign.Start,
-//                    fontSize = 15.sp,
-//                    color = Color.Black,
-//                    fontWeight = FontWeight.Normal,
-//                    fontFamily = Util.quicksand,
-//                    style = TextStyle.Default,
-//                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-//                )
-//            }
-//            Text(
-//                text = "Word Stems:",
-//                textAlign = TextAlign.Start,
-//                fontSize = 20.sp,
-//                color = Color.Black,
-//                fontWeight = FontWeight.Bold,
-//                fontFamily = Util.quicksand,
-//                style = TextStyle.Default,
-//                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-//            )
-//
-//            reponse.stems.forEach {
-//                Text(
-//                    text =  it,
-//                    textAlign = TextAlign.Start,
-//                    fontSize = 15.sp,
-//                    color = Color.Black,
-//                    fontWeight = FontWeight.Normal,
-//                    fontFamily = Util.quicksand,
-//                    style = TextStyle.Default,
-//                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-//                )
-//            }
+            Text(
+                text = "Related Terms:",
+                textAlign = TextAlign.Start,
+                fontSize = 20.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontFamily = Util.quicksand,
+                style = TextStyle.Default,
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+            )
+
+            reponse.relatedTerms.forEach {
+                Text(
+                    text = it,
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Util.quicksand,
+                    style = TextStyle.Default,
+                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                )
+            }
+            Text(
+                text = "Word Stems:",
+                textAlign = TextAlign.Start,
+                fontSize = 20.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontFamily = Util.quicksand,
+                style = TextStyle.Default,
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+            )
+
+            reponse.stems.forEach {
+                Text(
+                    text = it,
+                    textAlign = TextAlign.Start,
+                    fontSize = 15.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = Util.quicksand,
+                    style = TextStyle.Default,
+                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                )
+            }
 
         }
 
     }
-    FlowRow(
-        modifier = Modifier.padding(
-            start = 5.dp,
-            end = 0.dp,
-            top = 5.dp,
-            bottom = 5.dp
-        )
-    ) {
 
-        if (reponse.attributes?.isStandardIgbo == true) {
-
-            ProviderChip(
-                chipText = "Standard Igbo",
-                onChipSelected = {})
-        }
-        if (reponse.attributes?.isAccented == true) {
-            ProviderChip(
-                chipText = "Accented",
-                onChipSelected = {})
-        }
-        if (reponse.attributes?.isSlang == true) {
-            ProviderChip(
-                chipText = "Slang",
-                onChipSelected = {})
-        }
-        if (reponse.attributes?.isConstructedTerm == true) {
-            ProviderChip(
-                chipText = "Constructed Term",
-                onChipSelected = {})
-        }
-        if (reponse.attributes?.isBorrowedTerm == true) {
-            ProviderChip(
-                chipText = "Borrowed Term",
-                onChipSelected = {})
-        }
-        if (reponse.attributes?.isStem == true) {
-            ProviderChip(
-                chipText = "Stem",
-                onChipSelected = {})
-        }
-        if (reponse.attributes?.isCommon == true) {
-            ProviderChip(
-                chipText = "Common",
-                onChipSelected = {})
-        }
-
-    }
 
 }
