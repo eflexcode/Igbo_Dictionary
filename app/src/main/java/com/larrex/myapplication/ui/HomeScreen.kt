@@ -187,7 +187,7 @@ fun HomeScreen(viewModel: MainViewModel) {
                     modifier = Modifier.tabIndicatorOffset(it[state]),
                     color = green
                 )
-            }) {
+            }, containerColor = Color.White) {
                 titles.forEachIndexed { index, title ->
 
                     Tab(selected = state == index, onClick = {

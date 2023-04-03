@@ -3,11 +3,14 @@ package com.larrex.myapplication.ui.component
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.larrex.myapplication.R
 import com.larrex.myapplication.Util
 import com.larrex.myapplication.network.model.IgboApiResponse
+import com.larrex.myapplication.ui.theme.grayLight
 import com.larrex.myapplication.ui.theme.green
 import com.larrex.myapplication.ui.theme.greenLight
 import com.larrex.myapplication.ui.viewmodel.MainViewModel
@@ -37,14 +41,19 @@ fun SearchResponseItem(reponse: IgboApiResponse, viewModel: MainViewModel) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
+//    if (reponse.relatedTerms.size > 0) {
+//        reponse.relatedTerms.forEach {
+//            viewModel.getWordMeanings(it)
+//        }
+//    }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 0.dp)
     ) {
 
-        Column() {
+        Column(modifier = Modifier
+            .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)) {
             Text(
                 text = reponse.nsibidi.toString(),
                 textAlign = TextAlign.Start,
@@ -221,7 +230,6 @@ fun SearchResponseItem(reponse: IgboApiResponse, viewModel: MainViewModel) {
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
             )
 
-
             for (example in reponse.examples) {
                 Text(
                     text = "English: " + example.english.toString(),
@@ -246,59 +254,72 @@ fun SearchResponseItem(reponse: IgboApiResponse, viewModel: MainViewModel) {
 
 
             }
-            Text(
-                text = "Related Terms:",
-                textAlign = TextAlign.Start,
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                fontFamily = Util.quicksand,
-                style = TextStyle.Default,
-                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-            )
-
-            FlowRow() {
-                reponse.relatedTerms.forEach {
-                    Text(
-                        text = it,
-                        textAlign = TextAlign.Start,
-                        fontSize = 15.sp,
-                        color = green,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = Util.quicksand,
-                        style = TextStyle(textDecoration = TextDecoration.Underline),
-                        modifier = Modifier.padding(top = 3.dp, bottom = 5.dp, end = 3.dp)
-                    )
-                }
-            }
 
 
-            Text(
-                text = "Word Stems:",
-                textAlign = TextAlign.Start,
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                fontFamily = Util.quicksand,
-                style = TextStyle.Default,
-                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-            )
+//            Text(
+//                text = "Related Terms:",
+//                textAlign = TextAlign.Start,
+//                fontSize = 20.sp,
+//                color = Color.Black,
+//                fontWeight = FontWeight.Bold,
+//                fontFamily = Util.quicksand,
+//                style = TextStyle.Default,
+//                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//            )
 
-            reponse.stems.forEach {
-                Text(
-                    text = it,
-                    textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = Util.quicksand,
-                    style = TextStyle.Default,
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                )
-            }
+//            reponse.relatedTerms.forEach {
+//                viewModel.getSingleWordMeaning(it)
+//            }
+
+//            FlowRow() {
+//                reponse.relatedTerms.forEach {
+//                    val relatedTerm = mutableStateOf("")
+//
+////    val word = viewModel.relatedTerms.value
+//                    scope.launch { relatedTerm.value = viewModel.getSingleWordMeaning(it) }
+//                    Text(
+//                        text = relatedTerm.value,
+//                        textAlign = TextAlign.Start,
+//                        fontSize = 15.sp,
+//                        color = green,
+//                        fontWeight = FontWeight.Normal,
+//                        fontFamily = Util.quicksand,
+//                        style = TextStyle(textDecoration = TextDecoration.Underline),
+//                        modifier = Modifier.padding(top = 3.dp, bottom = 5.dp, end = 3.dp)
+//                    )
+//                }
+//
+//            }
+//
+//            Text(
+//                text = "Word Stems:",
+//                textAlign = TextAlign.Start,
+//                fontSize = 20.sp,
+//                color = Color.Black,
+//                fontWeight = FontWeight.Bold,
+//                fontFamily = Util.quicksand,
+//                style = TextStyle.Default,
+//                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//            )
+//
+//            reponse.stems.forEach {
+//                Text(
+//                    text = it,
+//                    textAlign = TextAlign.Start,
+//                    fontSize = 15.sp,
+//                    color = Color.Black,
+//                    fontWeight = FontWeight.Normal,
+//                    fontFamily = Util.quicksand,
+//                    style = TextStyle.Default,
+//                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                )
+//            }
 
         }
-
+//        Spacer(modifier = Modifier
+//            .height(0.5.dp)
+//            .fillMaxWidth()
+//            .background(grayLight))
     }
 
 

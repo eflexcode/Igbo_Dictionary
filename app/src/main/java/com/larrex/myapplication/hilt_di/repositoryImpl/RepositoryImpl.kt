@@ -72,7 +72,7 @@ class RepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun getSingleWordMeaning(wordId: String): Flow<Responce> {
+    override  fun getSingleWordMeaning(wordId: String): Flow<Responce> {
 
         return callbackFlow {
             val loadingResponse = Responce(Status.LOADING, emptyList(),IgboSingleWordApiResponse() ,"Loading...")
