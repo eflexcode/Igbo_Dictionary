@@ -7,8 +7,10 @@ data class IgboSingleWordApiResponse(
     @SerializedName("stems") var stems: ArrayList<Stems> = arrayListOf(),
     @SerializedName("word") var word: String? = null,
     @SerializedName("pronunciation") var pronunciation: String? = null,
+    @SerializedName("variations") var variations: ArrayList<String> = arrayListOf(),
     @SerializedName("attributes") var attributes: Attributes? = Attributes(),
     @SerializedName("relatedTerms") var relatedTerms: ArrayList<RelatedTerms> = arrayListOf(),
+    @SerializedName("examples") var examples: ArrayList<Examples> = arrayListOf(),
     @SerializedName("id") var id: String? = null,
     @SerializedName("wordClass") var wordClass: String? = null,
     @SerializedName("nsibidi") var nsibidi: String? = null

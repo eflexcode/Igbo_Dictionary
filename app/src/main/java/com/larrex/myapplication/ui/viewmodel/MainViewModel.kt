@@ -30,6 +30,11 @@ class MainViewModel @Inject constructor(
             Status.NOTHING, emptyList(), IgboSingleWordApiResponse(), "Nothing yet"
         )
     )
+    var singleLatestResponse = mutableStateOf<Responce>(
+        Responce(
+            Status.NOTHING, emptyList(), IgboSingleWordApiResponse(), "Nothing yet"
+        )
+    )
 
     val relatedTerms = mutableListOf<String>()
 //     val relatedTerms = mutableStateOf("")
@@ -47,15 +52,13 @@ class MainViewModel @Inject constructor(
 
     }
 
-    suspend fun getSingleWordMeaning(wordId: String):String {
-        val res = CompletableDeferred<String>()
+    suspend fun getSingleWordMeaning(wordId: String) {
 
             repository.getSingleWordMeaning(wordId).collectLatest {
 //                relatedTerms.add(it.singleWordResponse.word.toString())
-                res.complete( it.singleWordResponse.word.toString())
                 println(it.singleWordResponse.word.toString()+"ppppppppppppppp")
+                singleLatestResponse.value = it
             }
-       return res.await()
     }
 
     suspend fun playPronunciation(url: String) {
