@@ -8,7 +8,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.larrex.myapplication.network.model.IgboSingleWordApiResponse
 import com.larrex.myapplication.network.model.Responce
 import com.larrex.myapplication.network.model.Status
-import com.larrex.myapplication.repository.Repository
+import com.larrex.myapplication.network.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope

@@ -1,4 +1,4 @@
-package com.larrex.myapplication.repository
+package com.larrex.myapplication.network.repository
 
 import com.larrex.myapplication.network.model.IgboApiResponse
 import com.larrex.myapplication.network.model.Responce

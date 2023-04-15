@@ -234,49 +234,49 @@ fun SearchResponseItem(
 
             }
 
-            Text(
-                text = "Related Words",
-                textAlign = TextAlign.Start,
-                fontSize = 20.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                fontFamily = Util.quicksand,
-                style = TextStyle.Default,
-                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-            )
+//            Text(
+//                text = "Related Words",
+//                textAlign = TextAlign.Start,
+//                fontSize = 20.sp,
+//                color = Color.Black,
+//                fontWeight = FontWeight.Bold,
+//                fontFamily = Util.quicksand,
+//                style = TextStyle.Default,
+//                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//            )
 
 //            reponse.relatedTerms.forEach {
 //                viewModel.getSingleWordMeaning(it)
 //            }
 
-            FlowRow() {
-                reponse.relatedTerms.forEach {id->
-                    val relatedTerm = mutableStateOf("")
+//            FlowRow() {
+//                reponse.relatedTerms.forEach {id->
+//                    val relatedTerm = mutableStateOf("")
 
 //    val word = viewModel.relatedTerms.value
 //                    scope.launch { relatedTerm.value = viewModel.getSingleWordMeaning(it) }
 
-                    Text(
-                        text = id,
-                        textAlign = TextAlign.Start,
-                        fontSize = 15.sp,
-                        color = green,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = Util.quicksand,
-                        style = TextStyle(textDecoration = TextDecoration.Underline),
-                        modifier = Modifier
-                            .padding(top = 3.dp, bottom = 5.dp, end = 3.dp)
-                            .toggleable(true, true, onValueChange = {
-                                showSingleWord(id)
-                                scope.launch {
-                                    viewModel.getSingleWordMeaning(id)
-
-                                }
-                            })
-                    )
-                }
-
-            }
+//                    Text(
+//                        text = id,
+//                        textAlign = TextAlign.Start,
+//                        fontSize = 15.sp,
+//                        color = green,
+//                        fontWeight = FontWeight.Normal,
+//                        fontFamily = Util.quicksand,
+//                        style = TextStyle(textDecoration = TextDecoration.Underline),
+//                        modifier = Modifier
+//                            .padding(top = 3.dp, bottom = 5.dp, end = 3.dp)
+//                            .toggleable(true, true, onValueChange = {
+//                                showSingleWord(id)
+//                                scope.launch {
+//                                    viewModel.getSingleWordMeaning(id)
+//
+//                                }
+//                            })
+//                    )
+//                }
+//
+//            }
 //
 //            Text(
 //                text = "Word Stems:",

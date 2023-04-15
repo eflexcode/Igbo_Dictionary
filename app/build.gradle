@@ -97,4 +97,10 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.5'
     implementation 'com.google.android.exoplayer:extension-cronet:2.18.5'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.5'
+
+    def room_version = "2.5.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+
 }

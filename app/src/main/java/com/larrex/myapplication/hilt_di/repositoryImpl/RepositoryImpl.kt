@@ -6,7 +6,7 @@ import com.larrex.myapplication.network.model.IgboApiResponse
 import com.larrex.myapplication.network.model.IgboSingleWordApiResponse
 import com.larrex.myapplication.network.model.Responce
 import com.larrex.myapplication.network.model.Status
-import com.larrex.myapplication.repository.Repository
+import com.larrex.myapplication.network.repository.Repository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

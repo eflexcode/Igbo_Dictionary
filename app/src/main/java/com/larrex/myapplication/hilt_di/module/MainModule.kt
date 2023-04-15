@@ -1,7 +1,7 @@
 package com.larrex.myapplication.hilt_di.module
 
 import com.larrex.myapplication.hilt_di.repositoryImpl.RepositoryImpl
-import com.larrex.myapplication.repository.Repository
+import com.larrex.myapplication.network.repository.Repository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
