@@ -1,8 +1,12 @@
 package com.larrex.myapplication
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.larrex.myapplication.ui.theme.black
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +26,10 @@ class Util {
         val nsibidi  = FontFamily(
             Font(R.font.akagu2020_3)
         )
+
+        val backgroundColor
+        @Composable
+        get() = if (isSystemInDarkTheme()) black else Color.White
 
         fun getGreeting(): String {
 

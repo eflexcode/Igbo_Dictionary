@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -36,6 +37,7 @@ import com.larrex.myapplication.network.model.Status
 import com.larrex.myapplication.room.model.SearchHistory
 import com.larrex.myapplication.ui.component.SearchHistoryItem
 import com.larrex.myapplication.ui.component.SearchResponseItem
+import com.larrex.myapplication.ui.theme.grayLight
 import com.larrex.myapplication.ui.theme.green
 import com.larrex.myapplication.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
@@ -397,6 +399,10 @@ fun HomeScreen(viewModel: MainViewModel) {
                     colors = TextFieldDefaults.textFieldColors(
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
+                        containerColor = grayLight,
+                        cursorColor = green,
+                       focusedTextColor = Color.Black
+
                     ),
                     textStyle = TextStyle.Default.copy(
                         fontFamily = Util.quicksand,
@@ -646,9 +652,11 @@ fun HomeScreen(viewModel: MainViewModel) {
                                 items(viewModel.history) {
                                     SearchHistoryItem(searchHistory = it, onClick = {
                                         scope.launch {
+                                            searchValue = TextFieldValue(it)
                                             pagerState.scrollToPage(0, 0f)
                                             state = 0
                                             viewModel.getWordMeanings(it)
+                                            keyController?.hide()
                                         }
                                     }, onDelete = {
                                         viewModel.deleteHistory(it)

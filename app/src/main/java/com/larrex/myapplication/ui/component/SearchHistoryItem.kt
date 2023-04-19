@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,9 +26,11 @@ import com.larrex.myapplication.room.model.SearchHistory
 @Composable
 fun SearchHistoryItem(searchHistory: SearchHistory,onClick: (keyword:String)-> Unit,onDelete: (id:Int)-> Unit) {
 
-    Box(modifier = Modifier.fillMaxWidth().toggleable(true,true,onValueChange = {
-        onClick(searchHistory.keyword)
-    })) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .toggleable(true, true, onValueChange = {
+            onClick(searchHistory.keyword)
+        })) {
 
         Row(verticalAlignment = Alignment.CenterVertically, ) {
 
@@ -39,14 +42,16 @@ fun SearchHistoryItem(searchHistory: SearchHistory,onClick: (keyword:String)-> U
                 fontWeight = FontWeight.Bold,
                 fontFamily = Util.quicksand,
                 style = TextStyle.Default,
-                modifier = Modifier.weight(2f).padding(start = 10.dp)
+                modifier = Modifier
+                    .weight(2f)
+                    .padding(start = 10.dp)
                 )
 
             IconButton(modifier = Modifier.weight(0.3f),onClick = { searchHistory.id?.let {
                 onDelete(
                     it
                 )
-            } }) {
+            } }, colors = IconButtonDefaults.iconButtonColors(contentColor = Color.Black)) {
 
                 Icon(painter = rememberAsyncImagePainter(model = R.drawable.ic_cross), contentDescription = null)
 
