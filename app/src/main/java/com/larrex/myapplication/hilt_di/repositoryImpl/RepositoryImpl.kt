@@ -1,15 +1,19 @@
 package com.larrex.myapplication.hilt_di.repositoryImpl
 
 import android.app.Application
+import androidx.room.RoomDatabase
 import com.larrex.myapplication.network.IgboApiInterface
 import com.larrex.myapplication.network.model.IgboApiResponse
 import com.larrex.myapplication.network.model.IgboSingleWordApiResponse
 import com.larrex.myapplication.network.model.Responce
 import com.larrex.myapplication.network.model.Status
 import com.larrex.myapplication.network.repository.Repository
+import com.larrex.myapplication.room.SearchDatabase
+import com.larrex.myapplication.room.model.SearchHistory
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +22,8 @@ import javax.inject.Inject
 //@ActivityRetainedScoped
 class RepositoryImpl @Inject constructor(
     private var application: Application,
-    private var igboApiInterface: IgboApiInterface
+    private var igboApiInterface: IgboApiInterface,
+    private var database: SearchDatabase
 ) : Repository {
     override suspend fun getIgboApiResponse(keyword: String): Flow<Responce> {
 
@@ -104,5 +109,21 @@ class RepositoryImpl @Inject constructor(
             awaitClose { }
         }
 
+    }
+
+    override suspend fun addHistory(searchHistory: SearchHistory) {
+
+        database.dao().addHistory(searchHistory)
+
+    }
+
+    override suspend fun getAllHistory(): Flow<List<SearchHistory>> {
+
+        return database.dao().getAllHistory()
+
+    }
+
+    override fun deleteHistory(id: Int) {
+        database.dao().deleteHistory(id)
     }
 }

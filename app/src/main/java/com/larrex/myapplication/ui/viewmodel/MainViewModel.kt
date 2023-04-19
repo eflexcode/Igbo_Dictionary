@@ -1,6 +1,6 @@
 package com.larrex.myapplication.ui.viewmodel
 
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.android.exoplayer2.ExoPlayer
@@ -9,15 +9,12 @@ import com.larrex.myapplication.network.model.IgboSingleWordApiResponse
 import com.larrex.myapplication.network.model.Responce
 import com.larrex.myapplication.network.model.Status
 import com.larrex.myapplication.network.repository.Repository
+import com.larrex.myapplication.room.model.SearchHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +33,7 @@ class MainViewModel @Inject constructor(
         )
     )
 
-    val relatedTerms = mutableListOf<String>()
+    val history = mutableStateListOf<SearchHistory>()
 //     val relatedTerms = mutableStateOf("")
 
     fun getWordMeanings(keyword: String) {
@@ -54,11 +51,11 @@ class MainViewModel @Inject constructor(
 
     suspend fun getSingleWordMeaning(wordId: String) {
 
-            repository.getSingleWordMeaning(wordId).collectLatest {
+        repository.getSingleWordMeaning(wordId).collectLatest {
 //                relatedTerms.add(it.singleWordResponse.word.toString())
-                println(it.singleWordResponse.word.toString()+"ppppppppppppppp")
-                singleLatestResponse.value = it
-            }
+            println(it.singleWordResponse.word.toString() + "ppppppppppppppp")
+            singleLatestResponse.value = it
+        }
     }
 
     suspend fun playPronunciation(url: String) {
@@ -69,6 +66,33 @@ class MainViewModel @Inject constructor(
         exoPlayer.playWhenReady = true
         exoPlayer.prepare()
 
+    }
+
+    fun addHistory(searchHistory: SearchHistory) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.addHistory(searchHistory)
+
+        }
+
+    }
+
+    fun getAllHistory() {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            repository.getAllHistory().collectLatest {
+                history.clear()
+                history.addAll(it)
+            }
+        }
+    }
+
+    fun deleteHistory(id: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            repository.deleteHistory(id)
+
+        }
     }
 
 }

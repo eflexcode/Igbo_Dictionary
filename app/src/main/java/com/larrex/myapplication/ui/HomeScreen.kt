@@ -1,20 +1,14 @@
 package com.larrex.myapplication.ui
 
 import android.os.Handler
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -24,14 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -41,18 +32,16 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.larrex.myapplication.R
 import com.larrex.myapplication.Util
-import com.larrex.myapplication.network.model.Responce
 import com.larrex.myapplication.network.model.Status
-import com.larrex.myapplication.ui.component.ProviderChip
+import com.larrex.myapplication.room.model.SearchHistory
+import com.larrex.myapplication.ui.component.SearchHistoryItem
 import com.larrex.myapplication.ui.component.SearchResponseItem
 import com.larrex.myapplication.ui.theme.green
-import com.larrex.myapplication.ui.theme.greenLight
 import com.larrex.myapplication.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
-    ExperimentalPagerApi::class
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class, ExperimentalPagerApi::class
 )
 @Composable
 fun HomeScreen(viewModel: MainViewModel) {
@@ -70,283 +59,287 @@ fun HomeScreen(viewModel: MainViewModel) {
     val titles = listOf("Search Result", "History")
     var pagerState = rememberPagerState()
     val context = LocalContext.current
-
+    viewModel.getAllHistory()
 //    val wordMeaning by viewModel.getWordMeanings(searchValue.text)
 //        .collectAsState(initial = Responce(Status.NOTHING, null))
 
     var state by remember { mutableStateOf(0) }
 
-    if (sheetState.isVisible) {
-        ModalBottomSheet(
-            onDismissRequest = { /*TODO*/ },
-            sheetState = sheetState,
-            containerColor = Color.White, modifier = Modifier.height(600.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-
-                Column(
-                    modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
-                ) {
-                    Text(
-                        text = viewModel.singleLatestResponse.value.singleWordResponse.nsibidi.toString(),
-                        textAlign = TextAlign.Start,
-                        fontSize = 30.sp,
-                        color = green,
-                        fontWeight = FontWeight.Light,
-                        style = TextStyle.Default,
-                        fontFamily = Util.nsibidi,
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(bottom = 5.dp)
-                    ) {
-                        Text(
-                            text = viewModel.singleLatestResponse.value.singleWordResponse.word.toString(),
-                            textAlign = TextAlign.Start,
-                            fontSize = 30.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = Util.quicksand,
-                            style = TextStyle.Default,
-                        )
-                        Text(
-                            text = Util.getWordClassType(viewModel.singleLatestResponse.value.singleWordResponse.wordClass.toString()),
-                            textAlign = TextAlign.Center,
-                            fontSize = 13.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Light,
-                            style = TextStyle.Default,
-                            fontStyle = FontStyle.Italic,
-                            fontFamily = Util.quicksand,
-                            modifier = Modifier.padding(start = 5.dp)
-                        )
-                        androidx.compose.material.IconButton(
-                            onClick = {
-                                scope.launch {
-                                    viewModel.singleLatestResponse.value.singleWordResponse.pronunciation?.let { viewModel.playPronunciation(it) }
-                                    Toast.makeText(
-                                        context,
-                                        "Playing pronunciation for " + viewModel.singleLatestResponse.value.singleWordResponse.word,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            },
-                            modifier = Modifier
-                                .size(30.dp)
-                                .padding(start = 5.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_volume),
-                                contentDescription = null,
-                                modifier = Modifier.size(30.dp),
-                                tint = greenLight
-                            )
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.padding(
-                            start = 0.dp,
-                            end = 0.dp,
-                            top = 0.dp,
-                            bottom = 0.dp
-                        )
-                    ) {
-
-                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isStandardIgbo == true) {
-
-                            ProviderChip(
-                                chipText = "Standard Igbo",
-                                onChipSelected = {})
-                        }
-                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isAccented == true) {
-                            ProviderChip(
-                                chipText = "Accented",
-                                onChipSelected = {})
-                        }
-                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isSlang == true) {
-                            ProviderChip(
-                                chipText = "Slang",
-                                onChipSelected = {})
-                        }
-                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isConstructedTerm == true) {
-                            ProviderChip(
-                                chipText = "Constructed Term",
-                                onChipSelected = {})
-                        }
-                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isBorrowedTerm == true) {
-                            ProviderChip(
-                                chipText = "Borrowed Term",
-                                onChipSelected = {})
-                        }
-                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isStem == true) {
-                            ProviderChip(
-                                chipText = "Stem",
-                                onChipSelected = {})
-                        }
-                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isCommon == true) {
-                            ProviderChip(
-                                chipText = "Common",
-                                onChipSelected = {})
-                        }
-
-                    }
-
-//            PronunciationItem(play = {  }, isPlaying = false)
-
-                    viewModel.singleLatestResponse.value.singleWordResponse.definitions.forEachIndexed { index, defination ->
-                        val count = index + 1
-                        Text(
-                            text = "$count. " + defination,
-                            textAlign = TextAlign.Start,
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = Util.quicksand,
-                            style = TextStyle.Default,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                        )
-                    }
-
-                    Text(
-                        text = "variations:",
-                        textAlign = TextAlign.Start,
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = Util.quicksand,
-                        style = TextStyle.Default,
-                        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                    )
-
-                    viewModel.singleLatestResponse.value.singleWordResponse.variations.forEach {
-                        Text(
-                            text = it,
-                            textAlign = TextAlign.Start,
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = Util.quicksand,
-                            style = TextStyle.Default,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                        )
-                    }
-                    Text(
-                        text = "Examples:",
-                        textAlign = TextAlign.Start,
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = Util.quicksand,
-                        style = TextStyle.Default,
-                        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                    )
-
-                    for (example in viewModel.singleLatestResponse.value.singleWordResponse.examples) {
-                        Text(
-                            text = "English: " + example.english.toString(),
-                            textAlign = TextAlign.Start,
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = Util.quicksand,
-                            style = TextStyle.Default,
-                            modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
-                        )
-                        Text(
-                            text = "Igbo: " + example.igbo.toString(),
-                            textAlign = TextAlign.Start,
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = Util.quicksand,
-                            style = TextStyle.Default,
-                            modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
-                        )
-
-                    }
-
-                    Text(
-                        text = "Related Words:",
-                        textAlign = TextAlign.Start,
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = Util.quicksand,
-                        style = TextStyle.Default,
-                        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                    )
-                    viewModel.singleLatestResponse.value.singleWordResponse.variations.forEach {
-
-                        Text(
-                            text = it,
-                            textAlign = TextAlign.Start,
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = Util.quicksand,
-                            style = TextStyle.Default,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-                        )
+//    if (sheetState.isVisible) {
+//        ModalBottomSheet(
+//            onDismissRequest = { /*TODO*/ },
+//            sheetState = sheetState,
+//            containerColor = Color.White, modifier = Modifier.height(600.dp)
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//            ) {
 //
-                    }
-//            reponse.relatedTerms.forEach {
-//                viewModel.getSingleWordMeaning(it)
-//            }
-
-
-//
-//            reponse.stems.forEach {
-//                Text(
-//                    text = it,
-//                    textAlign = TextAlign.Start,
-//                    fontSize = 15.sp,
-//                    color = Color.Black,
-//                    fontWeight = FontWeight.Normal,
-//                    fontFamily = Util.quicksand,
-//                    style = TextStyle.Default,
-//                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
-//                )
-//            }
-
-                }
-            }
-//            Row(horizontalArrangement = Arrangement.SpaceAround) {
-//                CenterAlignedTopAppBar(
-//                    navigationIcon = {
-//                    IconButton(onClick = {
-//                        scope.launch {
-//                            sheetState.hide()
-//                        }
-//                    }) {
-//                        Icon(Icons.Rounded.Close, contentDescription = "Cancel")
-//                    }
-//                    },
-//                    title = {
-////                    Text("Search Result")
+//                Column(
+//                    modifier = Modifier
+//                        .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
+//                ) {
+//                    Text(
+//                        text = viewModel.singleLatestResponse.value.singleWordResponse.nsibidi.toString(),
+//                        textAlign = TextAlign.Start,
+//                        fontSize = 30.sp,
+//                        color = green,
+//                        fontWeight = FontWeight.Light,
+//                        style = TextStyle.Default,
+//                        fontFamily = Util.nsibidi,
+//                    )
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        horizontalArrangement = Arrangement.Center,
+//                        modifier = Modifier.padding(bottom = 5.dp)
+//                    ) {
 //                        Text(
 //                            text = viewModel.singleLatestResponse.value.singleWordResponse.word.toString(),
-//                            textAlign = TextAlign.Center,
+//                            textAlign = TextAlign.Start,
 //                            fontSize = 30.sp,
 //                            color = Color.Black,
 //                            fontWeight = FontWeight.Bold,
 //                            fontFamily = Util.quicksand,
 //                            style = TextStyle.Default,
-//
+//                        )
+//                        Text(
+//                            text = Util.getWordClassType(viewModel.singleLatestResponse.value.singleWordResponse.wordClass.toString()),
+//                            textAlign = TextAlign.Center,
+//                            fontSize = 13.sp,
+//                            color = Color.Black,
+//                            fontWeight = FontWeight.Light,
+//                            style = TextStyle.Default,
+//                            fontStyle = FontStyle.Italic,
+//                            fontFamily = Util.quicksand,
+//                            modifier = Modifier.padding(start = 5.dp)
+//                        )
+//                        androidx.compose.material.IconButton(
+//                            onClick = {
+//                                scope.launch {
+//                                    viewModel.singleLatestResponse.value.singleWordResponse.pronunciation?.let {
+//                                        viewModel.playPronunciation(
+//                                            it
+//                                        )
+//                                    }
+//                                    Toast.makeText(
+//                                        context,
+//                                        "Playing pronunciation for " + viewModel.singleLatestResponse.value.singleWordResponse.word,
+//                                        Toast.LENGTH_SHORT
+//                                    ).show()
+//                                }
+//                            },
+//                            modifier = Modifier
+//                                .size(30.dp)
+//                                .padding(start = 5.dp)
+//                        ) {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.ic_volume),
+//                                contentDescription = null,
+//                                modifier = Modifier.size(30.dp),
+//                                tint = greenLight
 //                            )
-//                    },
-//                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
-//                )
+//                        }
+//                    }
+//                    Row(
+//                        modifier = Modifier.padding(
+//                            start = 0.dp,
+//                            end = 0.dp,
+//                            top = 0.dp,
+//                            bottom = 0.dp
+//                        )
+//                    ) {
 //
+//                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isStandardIgbo == true) {
+//
+//                            ProviderChip(
+//                                chipText = "Standard Igbo",
+//                                onChipSelected = {})
+//                        }
+//                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isAccented == true) {
+//                            ProviderChip(
+//                                chipText = "Accented",
+//                                onChipSelected = {})
+//                        }
+//                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isSlang == true) {
+//                            ProviderChip(
+//                                chipText = "Slang",
+//                                onChipSelected = {})
+//                        }
+//                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isConstructedTerm == true) {
+//                            ProviderChip(
+//                                chipText = "Constructed Term",
+//                                onChipSelected = {})
+//                        }
+//                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isBorrowedTerm == true) {
+//                            ProviderChip(
+//                                chipText = "Borrowed Term",
+//                                onChipSelected = {})
+//                        }
+//                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isStem == true) {
+//                            ProviderChip(
+//                                chipText = "Stem",
+//                                onChipSelected = {})
+//                        }
+//                        if (viewModel.singleLatestResponse.value.singleWordResponse.attributes?.isCommon == true) {
+//                            ProviderChip(
+//                                chipText = "Common",
+//                                onChipSelected = {})
+//                        }
+//
+//                    }
+//
+////            PronunciationItem(play = {  }, isPlaying = false)
+//
+//                    viewModel.singleLatestResponse.value.singleWordResponse.definitions.forEachIndexed { index, defination ->
+//                        val count = index + 1
+//                        Text(
+//                            text = "$count. " + defination,
+//                            textAlign = TextAlign.Start,
+//                            fontSize = 15.sp,
+//                            color = Color.Black,
+//                            fontWeight = FontWeight.Normal,
+//                            fontFamily = Util.quicksand,
+//                            style = TextStyle.Default,
+//                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                        )
+//                    }
+//
+//                    Text(
+//                        text = "variations:",
+//                        textAlign = TextAlign.Start,
+//                        fontSize = 20.sp,
+//                        color = Color.Black,
+//                        fontWeight = FontWeight.Bold,
+//                        fontFamily = Util.quicksand,
+//                        style = TextStyle.Default,
+//                        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                    )
+//
+//                    viewModel.singleLatestResponse.value.singleWordResponse.variations.forEach {
+//                        Text(
+//                            text = it,
+//                            textAlign = TextAlign.Start,
+//                            fontSize = 15.sp,
+//                            color = Color.Black,
+//                            fontWeight = FontWeight.Normal,
+//                            fontFamily = Util.quicksand,
+//                            style = TextStyle.Default,
+//                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                        )
+//                    }
+//                    Text(
+//                        text = "Examples:",
+//                        textAlign = TextAlign.Start,
+//                        fontSize = 20.sp,
+//                        color = Color.Black,
+//                        fontWeight = FontWeight.Bold,
+//                        fontFamily = Util.quicksand,
+//                        style = TextStyle.Default,
+//                        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                    )
+//
+//                    for (example in viewModel.singleLatestResponse.value.singleWordResponse.examples) {
+//                        Text(
+//                            text = "English: " + example.english.toString(),
+//                            textAlign = TextAlign.Start,
+//                            fontSize = 15.sp,
+//                            color = Color.Black,
+//                            fontWeight = FontWeight.Normal,
+//                            fontFamily = Util.quicksand,
+//                            style = TextStyle.Default,
+//                            modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
+//                        )
+//                        Text(
+//                            text = "Igbo: " + example.igbo.toString(),
+//                            textAlign = TextAlign.Start,
+//                            fontSize = 15.sp,
+//                            color = Color.Black,
+//                            fontWeight = FontWeight.Normal,
+//                            fontFamily = Util.quicksand,
+//                            style = TextStyle.Default,
+//                            modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
+//                        )
+//
+//                    }
+//
+//                    Text(
+//                        text = "Related Words:",
+//                        textAlign = TextAlign.Start,
+//                        fontSize = 20.sp,
+//                        color = Color.Black,
+//                        fontWeight = FontWeight.Bold,
+//                        fontFamily = Util.quicksand,
+//                        style = TextStyle.Default,
+//                        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                    )
+//                    viewModel.singleLatestResponse.value.singleWordResponse.variations.forEach {
+//
+//                        Text(
+//                            text = it,
+//                            textAlign = TextAlign.Start,
+//                            fontSize = 15.sp,
+//                            color = Color.Black,
+//                            fontWeight = FontWeight.Normal,
+//                            fontFamily = Util.quicksand,
+//                            style = TextStyle.Default,
+//                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+//                        )
+////
+//                    }
+////            reponse.relatedTerms.forEach {
+////                viewModel.getSingleWordMeaning(it)
+////            }
+//
+//
+////
+////            reponse.stems.forEach {
+////                Text(
+////                    text = it,
+////                    textAlign = TextAlign.Start,
+////                    fontSize = 15.sp,
+////                    color = Color.Black,
+////                    fontWeight = FontWeight.Normal,
+////                    fontFamily = Util.quicksand,
+////                    style = TextStyle.Default,
+////                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+////                )
+////            }
+//
+//                }
 //            }
-
-        }
-
-    }
+////            Row(horizontalArrangement = Arrangement.SpaceAround) {
+////                CenterAlignedTopAppBar(
+////                    navigationIcon = {
+////                    IconButton(onClick = {
+////                        scope.launch {
+////                            sheetState.hide()
+////                        }
+////                    }) {
+////                        Icon(Icons.Rounded.Close, contentDescription = "Cancel")
+////                    }
+////                    },
+////                    title = {
+//////                    Text("Search Result")
+////                        Text(
+////                            text = viewModel.singleLatestResponse.value.singleWordResponse.word.toString(),
+////                            textAlign = TextAlign.Center,
+////                            fontSize = 30.sp,
+////                            color = Color.Black,
+////                            fontWeight = FontWeight.Bold,
+////                            fontFamily = Util.quicksand,
+////                            style = TextStyle.Default,
+////
+////                            )
+////                    },
+////                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+////                )
+////
+////            }
+//
+//        }
+//
+//    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -376,11 +369,15 @@ fun HomeScreen(viewModel: MainViewModel) {
             ) {
 
                 TextField(
-                    value = searchValue, onValueChange = { text ->
+                    value = searchValue,
+                    onValueChange = { text ->
                         searchValue = text
 
-                    }, modifier = Modifier
-                        .padding(top = 0.dp, end = 20.dp, start = 20.dp, bottom = 10.dp)
+                    },
+                    modifier = Modifier
+                        .padding(
+                            top = 0.dp, end = 20.dp, start = 20.dp, bottom = 10.dp
+                        )
                         .fillMaxWidth()
                         .height(55.dp),
                     placeholder = {
@@ -394,34 +391,34 @@ fun HomeScreen(viewModel: MainViewModel) {
                             style = TextStyle.Default,
 
                             )
-                    }, singleLine = true,
+                    },
+                    singleLine = true,
                     shape = RoundedCornerShape(10.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
-                    ), textStyle = TextStyle.Default.copy(
+                    ),
+                    textStyle = TextStyle.Default.copy(
                         fontFamily = Util.quicksand,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
-                    ), keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
                         keyController?.hide()
-//                        showProcess = true
-//                        handler.postDelayed({
-//                            showProcess = false
+
                         scope.launch {
                             viewModel.getWordMeanings(searchValue.text)
                             println(searchValue.text)
+                            viewModel.addHistory(SearchHistory(null, searchValue.text))
                         }
-//                        }, 2000)
 
                     })
                 )
             }
             TabRow(selectedTabIndex = state, indicator = {
                 TabRowDefaults.Indicator(
-                    modifier = Modifier.tabIndicatorOffset(it[state]),
-                    color = green
+                    modifier = Modifier.tabIndicatorOffset(it[state]), color = green
                 )
             }, containerColor = Color.White) {
                 titles.forEachIndexed { index, title ->
@@ -449,16 +446,11 @@ fun HomeScreen(viewModel: MainViewModel) {
 
             }
 
-//            HorizontalPager(count = 10) { page ->
-//                // Our page content
-//                Text(
-//                    text = "Page: $page",
-//                    modifier = Modifier.fillMaxSize()
-//                )
-//            }
             HorizontalPager(
-                count = titles.size, state = pagerState, modifier = Modifier
-                    .fillMaxSize(), userScrollEnabled = false
+                count = titles.size,
+                state = pagerState,
+                modifier = Modifier.fillMaxSize(),
+                userScrollEnabled = false
             ) {
 
                 when (it) {
@@ -474,7 +466,7 @@ fun HomeScreen(viewModel: MainViewModel) {
 
                                         LazyColumn() {
                                             items(viewModel.latestResponse.value.responce) {
-                                                SearchResponseItem(it,viewModel){
+                                                SearchResponseItem(it, viewModel) {
                                                     scope.launch {
                                                         sheetState.show()
                                                     }
@@ -482,7 +474,7 @@ fun HomeScreen(viewModel: MainViewModel) {
 
                                             }
                                         }
-                                    }else{
+                                    } else {
                                         Box(
                                             modifier = Modifier.fillMaxSize(),
                                             contentAlignment = Alignment.Center
@@ -495,7 +487,8 @@ fun HomeScreen(viewModel: MainViewModel) {
 
                                                 Image(
                                                     painter = rememberAsyncImagePainter(model = R.drawable.undraw_empty),
-                                                    contentDescription = null, Modifier.size(250.dp)
+                                                    contentDescription = null,
+                                                    Modifier.size(250.dp)
                                                 )
 
                                                 Text(
@@ -529,7 +522,8 @@ fun HomeScreen(viewModel: MainViewModel) {
 
                                             Image(
                                                 painter = rememberAsyncImagePainter(model = R.drawable.undraw_search_png),
-                                                contentDescription = null, Modifier.size(250.dp)
+                                                contentDescription = null,
+                                                Modifier.size(250.dp)
                                             )
 
                                             Text(
@@ -590,7 +584,8 @@ fun HomeScreen(viewModel: MainViewModel) {
 
                                             Image(
                                                 painter = rememberAsyncImagePainter(model = R.drawable.undraw_empty),
-                                                contentDescription = null, Modifier.size(250.dp)
+                                                contentDescription = null,
+                                                Modifier.size(250.dp)
                                             )
 
                                             Text(
@@ -645,9 +640,23 @@ fun HomeScreen(viewModel: MainViewModel) {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color.White)
-                        ){
+                        ) {
+
+                            LazyColumn() {
+                                items(viewModel.history) {
+                                    SearchHistoryItem(searchHistory = it, onClick = {
+                                        scope.launch {
+                                            pagerState.scrollToPage(0, 0f)
+                                            state = 0
+                                            viewModel.getWordMeanings(it)
+                                        }
+                                    }, onDelete = {
+                                        viewModel.deleteHistory(it)
+                                    })
 
 
+                                }
+                            }
 
                         }
                     }
