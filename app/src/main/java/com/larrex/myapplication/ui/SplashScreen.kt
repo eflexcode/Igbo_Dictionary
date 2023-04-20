@@ -4,10 +4,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Handler
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -62,7 +59,7 @@ fun SplashScreen(navController: NavController) {
                 }
             }
         }
-    }, 2000)
+    }, 2500)
 
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -83,16 +80,30 @@ fun SplashScreen(navController: NavController) {
             alignment = Alignment.Center
         )
 
-        Text(
-            text = "Igbo Dictionary",
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+            Text(
+                text = "Igbo Dictionary",
+                textAlign = TextAlign.Center,
+                fontSize = 60.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontFamily = Util.quicksand,
+                style = TextStyle.Default
+
+            )
+            Text(
+                    text = "Powered by igboapi.com",
             textAlign = TextAlign.Center,
-            fontSize = 60.sp,
+            fontSize = 15.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontFamily = Util.quicksand,
             style = TextStyle.Default
 
-        )
+            )
+        }
+        
+
 
     }
 

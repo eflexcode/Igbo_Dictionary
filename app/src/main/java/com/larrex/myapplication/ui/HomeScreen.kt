@@ -1,6 +1,5 @@
 package com.larrex.myapplication.ui
 
-import android.os.Handler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -17,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -56,14 +53,10 @@ fun HomeScreen(viewModel: MainViewModel) {
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    val handler = Handler()
-    var showProcess by remember { mutableStateOf(false) }
+    val showProcess by remember { mutableStateOf(false) }
     val titles = listOf("Search Result", "History")
-    var pagerState = rememberPagerState()
-    val context = LocalContext.current
+    val pagerState = rememberPagerState()
     viewModel.getAllHistory()
-//    val wordMeaning by viewModel.getWordMeanings(searchValue.text)
-//        .collectAsState(initial = Responce(Status.NOTHING, null))
 
     var state by remember { mutableStateOf(0) }
 
@@ -350,9 +343,6 @@ fun HomeScreen(viewModel: MainViewModel) {
 
         Column() {
 
-            if (showProcess) {
-                LinearProgressIndicator(color = green, modifier = Modifier.fillMaxWidth())
-            }
 
             Text(
                 text = Util.getGreeting(),
@@ -401,7 +391,7 @@ fun HomeScreen(viewModel: MainViewModel) {
                         focusedIndicatorColor = Color.Transparent,
                         containerColor = grayLight,
                         cursorColor = green,
-                       focusedTextColor = Color.Black
+                        focusedTextColor = Color.Black
 
                     ),
                     textStyle = TextStyle.Default.copy(
@@ -648,23 +638,24 @@ fun HomeScreen(viewModel: MainViewModel) {
                                 .background(Color.White)
                         ) {
 
-                            LazyColumn() {
-                                items(viewModel.history) {
-                                    SearchHistoryItem(searchHistory = it, onClick = {
-                                        scope.launch {
-                                            searchValue = TextFieldValue(it)
-                                            pagerState.scrollToPage(0, 0f)
-                                            state = 0
-                                            viewModel.getWordMeanings(it)
-                                            keyController?.hide()
-                                        }
-                                    }, onDelete = {
-                                        viewModel.deleteHistory(it)
-                                    })
+                            if (viewModel.history.size > 0)
+                                LazyColumn() {
+                                    items(viewModel.history) {
+                                        SearchHistoryItem(searchHistory = it, onClick = {
+                                            scope.launch {
+                                                searchValue = TextFieldValue(it)
+                                                pagerState.scrollToPage(0, 0f)
+                                                state = 0
+                                                viewModel.getWordMeanings(it)
+                                                keyController?.hide()
+                                            }
+                                        }, onDelete = {
+                                            viewModel.deleteHistory(it)
+                                        })
 
 
+                                    }
                                 }
-                            }
 
                         }
                     }

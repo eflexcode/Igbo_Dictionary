@@ -68,14 +68,12 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
-    implementation "com.google.accompanist:accompanist-permissions:0.26.2-beta"
-    implementation "com.google.accompanist:accompanist-pager:0.26.3-beta"
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     kapt "androidx.hilt:hilt-compiler:1.0.0"
-    implementation "com.google.accompanist:accompanist-permissions:0.26.2-beta"
+//    implementation "com.google.accompanist:accompanist-permissions:0.26.2-beta"
     implementation "com.google.accompanist:accompanist-pager:0.26.3-beta"
 
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.17.0"
@@ -87,7 +85,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
-    implementation "com.google.accompanist:accompanist-pager:0.13.0"
+//    implementation "com.google.accompanist:accompanist-pager:0.13.0"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.13.0"
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -99,7 +97,6 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.5'
 
     def room_version = "2.5.1"
-
 
     implementation "androidx.room:room-runtime:2.4.3"
     kapt "androidx.room:room-compiler:2.4.3"
